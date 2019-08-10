@@ -86,7 +86,7 @@ class SensitiveDataFilter(object):
             self.filter_http(data['request'])
 
         if data.get('user'):
-            self.filter_user(data['user'])
+            self.filter_user(data)
 
         if data.get('csp'):
             self.filter_csp(data['csp'])
@@ -163,9 +163,9 @@ class SensitiveDataFilter(object):
                 data[n] = varmap(self.sanitize, data[n])
 
     def filter_user(self, data):
-        if not data.get('data'):
+        if not data.get('user'):
             return
-        data['data'] = varmap(self.sanitize, data['data'])
+        data['user'] = varmap(self.sanitize, data['user'])
 
     def filter_crumb(self, data):
         for key in 'data', 'message':

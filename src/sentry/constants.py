@@ -213,6 +213,7 @@ WARN_SESSION_EXPIRED = 'Your session has expired.'  # TODO: translate this
 # Key to use when ordering a list of events manually
 EVENT_ORDERING_KEY = attrgetter('datetime', 'id')
 
+# If you change this, also change it in src/sentry/static/sentry/app/constants/index.jsx
 FILTER_MASK = '[Filtered]'
 
 # Maximum length of a symbol

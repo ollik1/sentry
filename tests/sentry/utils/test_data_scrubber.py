@@ -102,10 +102,34 @@ class SensitiveDataFilterTest(TestCase):
         assert 'headers' in http
         self._check_vars_sanitized(dict(http['headers']), proc)
 
-    def test_user(self):
+    def test_user_standard_entries(self):
+        """
+        Make sure we filter the entries we call out specifically. See
+        https://github.com/getsentry/semaphore/blob/becb2c3a6ab47e1894a4977980a6cf90f5f7e64e/general/src/protocol/user.rs#L28
+        for a list of those entries.
+        """
+
         data = {
             'user': {
-                'username': 'secret',
+                'id': '26',
+                'username': 'maiseythedog',
+                'email': 'maisey@dogsrule.com',
+                'name': 'Maisey Dog',
+            }
+        }
+        additional_sensitive_fields = ['email', 'name']
+
+        proc = SensitiveDataFilter(additional_sensitive_fields)
+        proc.apply(data)
+
+        assert data['user']['id'] == 26
+        assert data['user']['username'] == 'maiseythedog'
+        assert data['user']['email'] == FILTER_MASK
+        assert data['user']['name'] == FILTER_MASK
+
+    def test_user_extra_data(self):
+        data = {
+            'user': {
                 'data': VARS,
             },
         }
@@ -114,7 +138,6 @@ class SensitiveDataFilterTest(TestCase):
         proc.apply(data)
 
         assert 'user' in data
-        assert data['user']['username'] == 'secret'
         self._check_vars_sanitized(data['user']['data'], proc)
 
     def test_extra(self):

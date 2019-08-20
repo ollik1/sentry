@@ -7,7 +7,7 @@ import _ from 'lodash';
 import createReactClass from 'create-react-class';
 import styled, {css} from 'react-emotion';
 
-import {NEGATION_OPERATOR, SEARCH_WILDCARD} from 'app/constants';
+import {MAX_RELEASES, NEGATION_OPERATOR, SEARCH_WILDCARD} from 'app/constants';
 import {analytics} from 'app/utils/analytics';
 import {defined} from 'app/utils';
 import {
@@ -16,6 +16,7 @@ import {
   saveRecentSearch,
   unpinSearch,
 } from 'app/actionCreators/savedSearches';
+import {fetchReleases} from 'app/actionCreators/releases';
 import {t} from 'app/locale';
 import Button from 'app/components/button';
 import CreateSavedSearchButton from 'app/views/issueList/createSavedSearchButton';
@@ -446,6 +447,34 @@ class SmartSearchBar extends React.Component {
     ];
   };
 
+  getReleases = async (tag, query) => {
+    const releasePromise = this.fetchReleases(query);
+
+    const tags = this.getPredefinedTagValues(tag, query);
+    const tagValues = tags.map(v => ({
+      ...v,
+      type: 'first-release',
+    }));
+
+    const releases = await releasePromise;
+    const releaseValues = releases.map(r => ({
+      value: r.shortVersion,
+      desc: r.shortVersion,
+      type: 'first-release',
+    }));
+
+    return [...tagValues, ...releaseValues];
+  };
+
+  fetchReleases = async query => {
+    const {api, orgId} = this.props;
+
+    const queryString = new URLSearchParams(window.location.search);
+    const projectId = queryString.get('project');
+
+    return await fetchReleases(api, orgId, projectId, query, MAX_RELEASES);
+  };
+
   onInputClick = () => {
     this.updateAutoCompleteItems();
   };
@@ -555,9 +584,12 @@ class SmartSearchBar extends React.Component {
         return;
       }
 
-      const fetchTagValuesFn = tag.predefined
-        ? this.getPredefinedTagValues
-        : this.getTagValues;
+      const fetchTagValuesFn =
+        tag.key === 'firstRelease'
+          ? this.getReleases
+          : tag.predefined
+          ? this.getPredefinedTagValues
+          : this.getTagValues;
 
       const [tagValues, recentSearches] = await Promise.all([
         fetchTagValuesFn(tag, preparedQuery),

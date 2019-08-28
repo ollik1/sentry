@@ -174,10 +174,10 @@ class TraceView extends React.Component<PropType> {
           },
           {
             sampled: true,
-            start_timestamp: 1566588804.736,
+            start_timestamp: 1566588805.998,
             description:
               'GET /api/0/projects/food52/food52-frontend/stats/?stat=web-crawlers&since=1563996804&until=1566588804&resolution=1d',
-            timestamp: 1566588805.108,
+            timestamp: 1566588806.100,
             parent_span_id: 'abbd52b605bba1c5',
             trace_id: '39b7c04185204bb0b1320b60e979803c',
             op: 'http',
@@ -186,9 +186,9 @@ class TraceView extends React.Component<PropType> {
           },
           {
             sampled: true,
-            start_timestamp: 1566588804.727,
+            start_timestamp: 1566588805.127,
             description: 'GET /api/0/projects/food52/food52-frontend/',
-            timestamp: 1566588805.141,
+            timestamp: 1566588806.399,
             parent_span_id: 'abbd52b605bba1c5',
             trace_id: '39b7c04185204bb0b1320b60e979803c',
             op: 'http',
@@ -197,10 +197,10 @@ class TraceView extends React.Component<PropType> {
           },
           {
             sampled: true,
-            start_timestamp: 1566588804.74,
+            start_timestamp: 1566588805.41,
             description:
               'GET /api/0/projects/food52/food52-frontend/stats/?stat=discarded-hash&since=1563996804&until=1566588804&resolution=1d',
-            timestamp: 1566588805.185,
+            timestamp: 1566588806.239,
             parent_span_id: 'abbd52b605bba1c5',
             trace_id: '39b7c04185204bb0b1320b60e979803c',
             op: 'http',
